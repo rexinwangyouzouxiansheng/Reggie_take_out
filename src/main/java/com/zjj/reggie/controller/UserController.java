@@ -40,12 +40,17 @@ public class UserController {
             //随机生成一个验证码
             String code = MailUtils.achieveCode();
             log.info(code);
+
             //这里的phone其实就是邮箱，code是我们生成的验证码
-            MailUtils.sendTestMail(phone, code);
+            //这边由于邮箱发送验证码出bug了，就暂时先取消这个功能
+//            MailUtils.sendTestMail(phone, code);
+
+
 //            //验证码存session，方便后面拿出来比对
 //            session.setAttribute(phone, code);
             //验证码缓存到Redis，设置存活时间5分钟
-            redisTemplate.opsForValue().set(phone, code,5, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(phone, code ,5, TimeUnit.MINUTES);
+
             return Result.success("验证码发送成功");
         }
         return Result.error("验证码发送失败");
