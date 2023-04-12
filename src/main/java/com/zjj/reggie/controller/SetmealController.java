@@ -9,6 +9,8 @@ import com.zjj.reggie.service.SetmealDishService;
 import com.zjj.reggie.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,8 @@ public class SetmealController {
     SetmealService setmealService;
 
     @PostMapping
+    //设置allEntries为true，清空缓存名称为setmealCache的所有缓存
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public Result<String> add(@RequestBody SetmealDto setmealDto) {
         Result<String> result = setmealService.saveWithDeal(setmealDto);
         return result;
@@ -39,12 +43,16 @@ public class SetmealController {
     }
 
     @DeleteMapping()
+    //设置allEntries为true，清空缓存名称为setmealCache的所有缓存
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public Result<String> delete(@RequestParam("ids") Long[] ids) {
         Result<String> result = setmealService.deleteSetmeal(ids);
         return result;
     }
 
+
     @GetMapping("/list")
+    @Cacheable(value = "setmealCache", key = "#setmeal.categoryId + '_' + #setmeal.status")
     public Result<List<Setmeal>> list(Setmeal setmeal) {
         //条件构造器
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
