@@ -47,7 +47,13 @@ public class LoginCheckFilter implements Filter {
                 "/common/**",  // 对于通用操作（文件上传和下载）就别拦截了
                 //对用户登陆操作放行
                 "/user/login",
-                "/user/sendMsg"
+                "/user/sendMsg",
+
+                // swagger
+                "/doc.html",
+                "/webjars/**",
+                "/swagger-resources",
+                "/v2/api-docs"
 
         };
 
